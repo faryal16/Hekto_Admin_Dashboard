@@ -8,5 +8,5 @@ export default clerkMiddleware({
 });
 
 export const config = {
-  matcher: ['/admin/*'],  // Adjust this according to your requirements
+  matcher: ['/admin/dashboard*'],  // Adjust this according to your requirements
 };

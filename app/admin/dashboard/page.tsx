@@ -1,86 +1,88 @@
 "use client";
 
-import { useState } from "react";
-import { useUser, UserButton } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { Menu, X } from "lucide-react"; // Icons for mobile menu
-import Sales from "./sales/page";
-import Orders from "./orders/page";
-import Analytics from "./analytics/page";
-import Settings from "./settings/page";
-import ProductsPage from "./products/page";
-import AddProductPage from "./addProduct/page";
-import Visitors from "./visitors/page";
-import Sidebar from "@/components/Sidebar";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
 
-export default function Dashboard() {
-  const [activePage, setActivePage] = useState("orders");
-  const { isSignedIn } = useUser(); // Check if the user is signed in
-  const router = useRouter();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Toggle sidebar
+const salesData = [
+  { date: "Jan", sales: 4000 },
+  { date: "Feb", sales: 3000 },
+  { date: "Mar", sales: 5000 },
+  { date: "Apr", sales: 7000 },
+  { date: "May", sales: 6000 },
+];
 
-  // If user is not signed in, display sign-in prompt
-  if (!isSignedIn) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen text-center p-6">
-        <h2 className="text-xl text-red-500 mb-4">You are not signed in. Please log in.</h2>
-        <button
-          onClick={() => router.push("/sign-in")}
-          className="border px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-700 text-white"
-        >
-          Go to Sign In
-        </button>
-      </div>
-    );
-  }
+const productPerformance = [
+  { product: "Chairs", sales: 2400 },
+  { product: "Sofas", sales: 4000 },
+  { product: "Tables", sales: 1800 },
+  { product: "Beds", sales: 3200 },
+];
 
-  const renderPage = () => {
-    switch (activePage) {
-      case "orders":
-        return <Orders />;
-      case "sales":
-        return <Sales />;
-      case "visitors":
-        return <Visitors />;
-      case "products":
-        return <ProductsPage />;
-      case "add-products":
-        return <AddProductPage />;
-      case "analytics":
-        return <Analytics />;
-      case "settings":
-        return <Settings />;
-      default:
-        return <Orders />;
-    }
-  };
+const orderDistribution = [
+  { name: "Completed", value: 60 },
+  { name: "Pending", value: 30 },
+  { name: "Cancelled", value: 10 },
+];
 
+const COLORS = ["#4CAF50", "#FFC107", "#FF5722"];
+
+export default function DashboardPage() {
   return (
-    <div className="flex h-screen bg-slate-200">
-      {/* Sidebar - Responsive */}
-      <div className={`fixed inset-y-0 left-0 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} 
-          transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:w-64 bg-white shadow-lg z-50`}>
-        <Sidebar activePage={activePage} setActivePage={setActivePage} />
-      </div>
+    <div className="p-6">
+      <h2 className="text-center text-3xl font-bold mb-6">Welcome to the Admin Dashboard</h2>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto p-6 w-full">
-        {/* Navbar (Mobile Toggle + User Profile) */}
-        <div className="flex justify-between items-center mb-4">
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="lg:hidden p-2">
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-
-          <h1 className="text-2xl md:text-3xl font-semibold flex-1 text-center">Admin Dashboard</h1>
-
-          {/* User Profile */}
-          <div className="flex items-center  space-x-4">
-            <UserButton afterSignOutUrl="/" />
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Sales Chart */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-4">Sales Trends</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={salesData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="sales" stroke="#4C9BFE" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
 
-        {/* Render Active Page */}
-        {renderPage()}
+        {/* Product Performance */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-4">Top Products</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={productPerformance}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="product" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="sales" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Order Distribution */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-4">Order Status</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={orderDistribution}
+                cx="50%"
+                cy="50%"
+                label
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {orderDistribution.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

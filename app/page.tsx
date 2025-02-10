@@ -23,7 +23,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-pink-500 to-teal-500">
+    <div className="flex justify-center text-center items-center h-screen bg-gradient-to-r from-pink-500 to-teal-300">
       {isSignedIn ? (
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-3xl font-bold  text-white">Welcome, {user.fullName}!</h1>

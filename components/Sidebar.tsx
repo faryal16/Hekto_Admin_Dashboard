@@ -1,30 +1,38 @@
-import React from "react";
+"use client"
 
-interface SidebarProps {
-    activePage: string;
-    setActivePage: (page: string) => void;
-}
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-const Sidebar: React.FC<SidebarProps> = ({ activePage, setActivePage }) => {
-    return (
-        <div className="w-64 bg-white shadow-md p-4">
-            <h2 className="font-bold text-xl mb-6">Dashboard</h2>
-            <ul className="space-y-4">
-                {["orders", "sales", "visitors","products","add-products", "analytics", "settings"].map((page) => (
-                    <li key={page}>
-                        <button
-                            onClick={() => setActivePage(page)}
-                            className={`w-full text-left p-2 rounded-lg transition-all ${
-                                activePage === page ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
-                            }`}
-                        >
-                            {page.charAt(0).toUpperCase() + page.slice(1)}
-                        </button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+const Sidebar = () => {
+  const pathname = usePathname();
+
+  const links = [
+    { name: "Orders", path: "/admin/dashboard/orders" },
+    { name: "Sales", path: "/admin/dashboard/sales" },
+    { name: "Visitors", path: "/admin/dashboard/visitors" },
+    { name: "Products", path: "/admin/dashboard/products" },
+    { name: "Add Product", path: "/admin/dashboard/addProduct" },
+    { name: "Analytics", path: "/admin/dashboard/analytics" },
+    { name: "Settings", path: "/admin/dashboard/settings" },
+  ];
+
+  return (
+    <div className="h-full p-4 bg-white shadow-lg">
+      <h2 className="text-lg font-bold mb-6">Dashboard</h2>
+      <ul>
+        {links.map(({ name, path }) => (
+          <li key={path}>
+            <Link
+              href={path}
+              className={`block p-2 rounded ${pathname === path ? "bg-blue-500 text-white" : "hover:bg-gray-200"}`}
+            >
+              {name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default Sidebar;

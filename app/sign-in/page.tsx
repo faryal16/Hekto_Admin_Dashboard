@@ -18,7 +18,7 @@ export default function SignInPage() {
   }, [isLoaded, isSignedIn, router]);
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-500 to-teal-500">
+    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-teal-300 to-pink-500">
       {!isSignedIn && (
         <div className="bg-white p-8 rounded-lg shadow-lg space-y-6 w-full max-w-md">
           <h2 className="text-3xl text-center font-semibold text-gray-800">Sign In</h2>
